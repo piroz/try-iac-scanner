@@ -54,3 +54,4 @@ jobs:
       - uses: ./.github/actions/reviewdog
         with:
           args: -f=sarif -name="Snyk Infrastructure as Code"
+          token: ${{ secrets.REVIEWDOG_TOKEN }}

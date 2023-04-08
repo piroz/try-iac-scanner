@@ -42,3 +42,4 @@ jobs:
       - uses: ./.github/actions/reviewdog
         with:
           args: -f=sarif -name="tfsec"
+          token: ${{ secrets.REVIEWDOG_TOKEN }}
