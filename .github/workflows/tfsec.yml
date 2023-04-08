@@ -39,6 +39,6 @@ jobs:
           # Path to SARIF file relative to the root of the repository
           sarif_file: tfsec.sarif
 
-      - uses: ./github/actions/reviewdog
+      - uses: ./.github/actions/reviewdog
         with:
           args: -f=sarif -name="tfsec"

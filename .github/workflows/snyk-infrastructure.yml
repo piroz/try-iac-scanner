@@ -51,6 +51,6 @@ jobs:
         with:
           sarif_file: snyk.sarif
 
-      - uses: ./github/actions/reviewdog
+      - uses: ./.github/actions/reviewdog
         with:
           args: -f=sarif -name="Snyk Infrastructure as Code"
