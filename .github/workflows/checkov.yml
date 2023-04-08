@@ -11,6 +11,8 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+permissions: read-all
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "scan"
@@ -46,3 +48,13 @@ jobs:
         if: success() || failure()
         with:
           sarif_file: results.sarif
+
+      - name: Install reviewdog
+        run: |
+          sudo curl -fL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
+          
+      - name: Run reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.REVIEWDOG_TOKEN }}
+        run: |
+          reviewdog -f=sarif -name="checkov"

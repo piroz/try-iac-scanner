@@ -13,6 +13,8 @@ on:
 #  schedule:
 #    - cron: '39 12 * * 6'
 
+permissions: read-all
+
 jobs:
   tfsec:
     name: Run tfsec sarif report
