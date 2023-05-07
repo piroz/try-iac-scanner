@@ -1,50 +1,20 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: tfsec
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-#  schedule:
-#    - cron: '39 12 * * 6'
-
-permissions: read-all
-
+on: [pull_request]
 jobs:
   tfsec:
-    name: Run tfsec sarif report
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
+    name: runner / tfsec
+    runs-on: ubuntu-latest # Windows and macOS are also supported
 
     steps:
       - name: Clone repo
         uses: actions/checkout@v3
 
-      - name: Run tfsec
-        uses: aquasecurity/tfsec-sarif-action@9a83b5c3524f825c020e356335855741fd02745f
+      - name: Run tfsec with reviewdog output on the PR
+        uses: reviewdog/action-tfsec@master
         with:
-          sarif_file: tfsec.sarif
-
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          # Path to SARIF file relative to the root of the repository
-          sarif_file: tfsec.sarif
-
-      - name: Install reviewdog
-        run: |
-          sudo curl -fL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
-          
-      - name: Run reviewdog
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.REVIEWDOG_TOKEN }}
-        run: |
-          reviewdog -f=sarif -name="tfsec"
+          github_token: ${{ secrets.REVIEWDOG_TOKEN }}
+          level: info # Get more output from reviewdog
+          filter_mode: nofilter # Check all files, not just the diff
+          fail_on_error: true # Fail action if errors are found
+          flags: -tee # Add debug flag to reviewdog
+          tfsec_flags: "" # Optional
